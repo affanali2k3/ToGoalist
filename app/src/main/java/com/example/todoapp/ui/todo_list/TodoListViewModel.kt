@@ -2,8 +2,8 @@ package com.example.todoapp.ui.todo_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.Todo
-import com.example.todoapp.data.TodoRepository
+import com.example.todoapp.data.todos.Todo
+import com.example.todoapp.data.todos.TodoRepository
 import com.example.mynewapp.util.Routes
 import com.example.mynewapp.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,7 +39,7 @@ class TodoListViewModel @Inject constructor(
             }
             is TodoListEvent.OnDoneTodoClick -> {
                 viewModelScope.launch {
-                    repository.insertTodo(event.todo.copy(isDone = event.isDone))
+                    repository.deleteTodo(event.todo)
                 }
             }
             is TodoListEvent.OnDeleteTodoClick -> {

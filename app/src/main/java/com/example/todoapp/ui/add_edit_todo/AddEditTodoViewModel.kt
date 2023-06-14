@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todoapp.data.Todo
-import com.example.todoapp.data.TodoRepository
+import com.example.todoapp.data.todos.Todo
+import com.example.todoapp.data.todos.TodoRepository
 import com.example.mynewapp.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +26,7 @@ class AddEditTodoViewModel @Inject constructor(
     var title by mutableStateOf("")
         private set
 
-    var description by mutableStateOf("")
+    var description by mutableStateOf<String?>(null)
         private set
 
     private val _uiEvent = Channel<UiEvent>()

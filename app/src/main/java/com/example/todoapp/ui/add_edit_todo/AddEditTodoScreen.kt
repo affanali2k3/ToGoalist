@@ -62,7 +62,7 @@ fun AddEditTodoScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             androidx.compose.material.TextField(
-                value = viewModel.description,
+                value = viewModel.description ?: "",
                 onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it)) },
                 placeholder = {
                     Text(text = "Description")

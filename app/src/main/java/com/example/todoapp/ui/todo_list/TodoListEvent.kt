@@ -1,6 +1,6 @@
 package com.example.todoapp.ui.todo_list
 
-import com.example.todoapp.data.Todo
+import com.example.todoapp.data.todos.Todo
 
 sealed class TodoListEvent{
     data class OnDeleteTodoClick(val todo: Todo): TodoListEvent()
