@@ -9,6 +9,11 @@ class UserGoalsRepository(
         return dao.getUserGoals()
     }
 
+    suspend fun deleteAllUserGoals(){
+        println("Deleting")
+        dao.deleteAllUserGoals()
+    }
+
     suspend fun insertUserGoal(goal: SingleGoal) {
         dao.insertUserGoal(goal)
     }

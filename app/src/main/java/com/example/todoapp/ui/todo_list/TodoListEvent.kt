@@ -7,5 +7,7 @@ sealed class TodoListEvent{
     data class OnDoneTodoClick(val todo: Todo, val isDone: Boolean): TodoListEvent()
     data class OnViewTodoClick(val todo: Todo): TodoListEvent()
     object OnUndoTodoClick: TodoListEvent()
+    object OnAddGoalClick: TodoListEvent()
     object OnAddTodoClick: TodoListEvent()
+    object OnDeleteAllGoalsLongClick: TodoListEvent()
 }
