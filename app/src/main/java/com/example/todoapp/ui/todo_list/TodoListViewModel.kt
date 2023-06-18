@@ -1,5 +1,8 @@
 package com.example.todoapp.ui.todo_list
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todoapp.data.todos.Todo
@@ -21,6 +24,8 @@ class TodoListViewModel @Inject constructor(
 ) : ViewModel() {
     val todos = repository.getTodos()
     val goals = goalsRepository.getUserGoals()
+    val addTodoDialogOpen: MutableState<Boolean> =
+        mutableStateOf(false)
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
     private var lastDeletedTodo: Todo? = null
@@ -29,7 +34,6 @@ class TodoListViewModel @Inject constructor(
         when (event) {
             is TodoListEvent.OnAddGoalClick -> {
                 viewModelScope.launch {
-                    println("Here")
                     goalsRepository.insertUserGoal(
                         SingleGoal(
                             23,
@@ -52,7 +56,8 @@ class TodoListViewModel @Inject constructor(
             }
 
             is TodoListEvent.OnAddTodoClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO))
+                addTodoDialogOpen.value = true
+//                sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO))
             }
 
             is TodoListEvent.OnUndoTodoClick -> {

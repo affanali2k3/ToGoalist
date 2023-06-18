@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoScreen
-import com.example.todoapp.ui.todo_list.TodoListScreen
 import com.example.mynewapp.util.Routes
+import com.example.todoapp.ui.todo_list.views.TodoListScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
