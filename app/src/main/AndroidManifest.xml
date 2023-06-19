@@ -17,8 +17,8 @@
         <activity
 
             android:name=".MainActivity"
-            android:label="ToGoalist"
-            android:exported="true">
+            android:exported="true"
+            android:label="ToGoalist">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +26,8 @@
             </intent-filter>
         </activity>
 
-        />
-    </application>
 
+    </application>
 
 
 </manifest>
