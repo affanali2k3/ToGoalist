@@ -7,8 +7,8 @@ import androidx.compose.ui.platform.LocalContext
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SelectGoalDropDown(label: String) {
-    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
+fun SelectGoalDropDown(label: String, listItems: Array<String>) {
+//    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
     val contextForToast = LocalContext.current.applicationContext
     // state of the menu
     var expanded by remember {

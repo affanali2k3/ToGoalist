@@ -11,7 +11,7 @@ import com.example.todoapp.data.todos.TodoRepository
 import com.example.mynewapp.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,46 +19,32 @@ import javax.inject.Inject
 class AddEditTodoViewModel @Inject constructor(
     private val repository: TodoRepository,
     savedStateHandle: SavedStateHandle
-): ViewModel() {
+) : ViewModel() {
     var todo by mutableStateOf<Todo?>(null)
         private set
-
     var title by mutableStateOf("")
         private set
-
     var description by mutableStateOf<String?>(null)
         private set
-
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+    private val _uiState = MutableStateFlow(AddEditTodoState())
+    val uiState: StateFlow<AddEditTodoState> = _uiState.asStateFlow()
 
-    init {
-        val todoId = savedStateHandle.get<Int>("todoId")!!
-        if(todoId != -1){
-            viewModelScope.launch {
-                repository.getTodo(todoId)?.let { todo->
-                    title = todo.title
-                    description = todo.description ?: ""
-                    this@AddEditTodoViewModel.todo = todo
-                }
-            }
-        }
-    }
+    fun onEvent(event: AddEditTodoEvent) {
+        when (event) {
+            is AddEditTodoEvent.OnTitleChange -> setTodoTitle(event.title)
 
-    fun onEvent(event: AddEditTodoEvent){
-        when(event){
-            is AddEditTodoEvent.OnTitleChange -> {
-                title = event.title
-            }
-            is AddEditTodoEvent.OnDescriptionChange -> {
-                description = event.description
-            }
+            is AddEditTodoEvent.OnDescriptionChange -> setTodoDescription(event.description)
+
             is AddEditTodoEvent.OnSaveTodo -> {
                 viewModelScope.launch {
-                    if(title.isBlank()){
-                        sendUiEvent(UiEvent.showSnackbar(
-                            message = "Title cannot be empty"
-                        ))
+                    if (title.isBlank()) {
+                        sendUiEvent(
+                            UiEvent.showSnackbar(
+                                message = "Title cannot be empty"
+                            )
+                        )
                         return@launch
                     }
                     repository.insertTodo(
@@ -75,7 +61,36 @@ class AddEditTodoViewModel @Inject constructor(
         }
     }
 
-    private fun sendUiEvent(event: UiEvent){
+    private fun setTodoTitle(newTitle: String) {
+        _uiState.update {
+            it.copy(
+                title = newTitle,
+                description = _uiState.value.description,
+                categoriesWithPoints = _uiState.value.categoriesWithPoints,
+                priority = _uiState.value.priority,
+                date = _uiState.value.date,
+                time = _uiState.value.time
+            )
+        }
+
+    }
+
+    private fun setTodoDescription(newDescription: String){
+        _uiState.update {
+            it.copy(
+                title = _uiState.value.title,
+                description = newDescription,
+                categoriesWithPoints = _uiState.value.categoriesWithPoints,
+                priority = _uiState.value.priority,
+                date = _uiState.value.date,
+                time = _uiState.value.time
+            )
+        }
+    }
+
+
+
+    private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)
         }

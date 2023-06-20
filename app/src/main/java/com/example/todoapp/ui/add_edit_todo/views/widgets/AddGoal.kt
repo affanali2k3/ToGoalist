@@ -48,7 +48,7 @@ fun AddGoal() {
         Spacer(modifier = Modifier.height(8.dp))
 
 
-        SelectGoalDropDown(label = "Color")
+        SelectGoalDropDown(label = "Color", listItems = arrayOf("Yellow", "Green", "Red", "Black"))
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
             value = maxPoints.value,
@@ -59,7 +59,7 @@ fun AddGoal() {
             placeholder = { Text(text = "Max Points") }
         )
         Spacer(modifier = Modifier.height(8.dp))
-        SelectGoalDropDown(label = "Priority")
+        SelectGoalDropDown(label = "Priority", arrayOf("High", "Medium", "Low", "None"))
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier
