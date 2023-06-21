@@ -4,10 +4,12 @@ import android.widget.Toast
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun SelectGoalDropDown(label: String, listItems: Array<String>) {
+fun SelectGoalDropDown(label: String, listItems: Array<String>, viewModel: AddEditTodoViewModel = hiltViewModel()) {
 //    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
     val contextForToast = LocalContext.current.applicationContext
     // state of the menu

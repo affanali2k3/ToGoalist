@@ -63,28 +63,14 @@ class AddEditTodoViewModel @Inject constructor(
 
     private fun setTodoTitle(newTitle: String) {
         _uiState.update {
-            it.copy(
-                title = newTitle,
-                description = _uiState.value.description,
-                categoriesWithPoints = _uiState.value.categoriesWithPoints,
-                priority = _uiState.value.priority,
-                date = _uiState.value.date,
-                time = _uiState.value.time
-            )
+            it.copy(title = newTitle)
         }
 
     }
 
     private fun setTodoDescription(newDescription: String){
         _uiState.update {
-            it.copy(
-                title = _uiState.value.title,
-                description = newDescription,
-                categoriesWithPoints = _uiState.value.categoriesWithPoints,
-                priority = _uiState.value.priority,
-                date = _uiState.value.date,
-                time = _uiState.value.time
-            )
+            it.copy(description = newDescription)
         }
     }
 
