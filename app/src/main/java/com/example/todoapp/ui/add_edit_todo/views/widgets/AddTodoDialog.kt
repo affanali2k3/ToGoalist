@@ -1,30 +1,23 @@
-package com.example.todoapp.ui.todo_list.views
+package com.example.todoapp.ui.add_edit_todo.views.widgets
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material3.ElevatedButton
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.todoapp.ui.add_edit_todo.AddEditTodoEvent
+import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
 import com.example.todoapp.ui.todo_list.TodoListViewModel
 import com.example.todoapp.ui.todo_list.views.widgets.AddGoal
 import com.example.todoapp.ui.todo_list.views.widgets.AddTodo
-import com.maxkeppeker.sheets.core.models.base.UseCaseState
-import com.maxkeppeler.sheets.calendar.CalendarDialog
-import com.maxkeppeler.sheets.calendar.models.CalendarSelection
-import com.maxkeppeler.sheets.clock.ClockDialog
-import com.maxkeppeler.sheets.clock.models.ClockSelection
-import java.time.LocalDate
-import java.time.LocalTime
-import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddTodoDialog(
 ) {
-    val viewModel: TodoListViewModel = viewModel()
+    val viewModel: AddEditTodoViewModel = hiltViewModel()
     val openDialog by viewModel.addTodoDialogOpen
     val todoGoal = mutableStateOf(true)
 
@@ -63,7 +56,7 @@ fun AddTodoDialog(
                     ElevatedButton(onClick = { /*TODO*/ }) {
                         Text("Cancel")
                     }
-                    ElevatedButton(onClick = { /*TODO*/ }) {
+                    ElevatedButton(onClick = { viewModel.onEvent(AddEditTodoEvent.OnSaveTodo)}) {
                         Text("Save")
                     }
                 }

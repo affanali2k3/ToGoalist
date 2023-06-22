@@ -29,6 +29,8 @@ import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
+import com.maxkeppeler.sheets.clock.ClockDialog
+import com.maxkeppeler.sheets.clock.models.ClockSelection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
 import java.time.LocalTime
@@ -39,10 +41,6 @@ fun AddTodo(
     viewModel: AddEditTodoViewModel = hiltViewModel()
 ) {
     val state = viewModel.uiState.collectAsState()
-    val categoryPoints = remember { mutableStateOf("") }
-    val hours = remember { mutableStateOf(LocalTime.now().hour) }
-    val minutes = remember { mutableStateOf(LocalTime.now().minute) }
-    val date = remember { mutableStateOf(LocalDate.now()) }
     val showCalendar = remember { mutableStateOf(false) }
     val calendarState = UseCaseState(
         onFinishedRequest = {
@@ -52,7 +50,7 @@ fun AddTodo(
     CalendarDialog(
         state = calendarState,
         selection = CalendarSelection.Date {
-            date.value = it
+            viewModel.onEvent(AddEditTodoEvent.OnDateChange(it))
         },
     )
     val showClock = remember { mutableStateOf(false) }
@@ -61,45 +59,51 @@ fun AddTodo(
             showClock.value = false
         }
     )
+    ClockDialog(state = clockState, selection = ClockSelection.HoursMinutes { newHour, newMinute ->
+        viewModel.onEvent(AddEditTodoEvent.OnTimeChange(Pair(newHour, newMinute)))
+    })
     Column {
         OutlinedTextField(
             value = state.value.title,
-            onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it))},
+            onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it)) },
             placeholder = { Text(text = "Title") }
         )
         Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = state.value.description,
-            onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it))},
+            onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it)) },
             placeholder = { Text(text = "Description") }
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        SelectGoalDropDown(label = "Category", listItems = arrayOf("Weight", "Kotlin", "Saas"))
+        DropDownForCategory(label = "Category", listItems = arrayOf("Weight", "Kotlin", "Saas"))
         Spacer(modifier = Modifier.height(8.dp))
         Row {
             Box(Modifier.width(80.dp)) {
                 OutlinedTextField(
-                    value = categoryPoints.value,
-                    onValueChange = { newValue ->
-                        categoryPoints.value = newValue
-                    },
+                    value = state.value.currentPoints,
+                    onValueChange = { viewModel.onEvent(AddEditTodoEvent.OnPointsChange(it)) },
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     placeholder = { Text(text = "Points") }
                 )
             }
-            IconButton(onClick = { /*TODO*/ }) {
+            IconButton(onClick = { viewModel.onEvent(AddEditTodoEvent.OnAddCategoryWithPoints) }) {
                 Icon(imageVector = Icons.Default.Add, contentDescription = "Add goal")
             }
         }
 
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow() {
-            goalAssignedToTaskDisplay("Kotlin", 2, Color.Yellow)
+            state.value.categoriesWithPoints.forEach { entry ->
+                goalAssignedToTaskDisplay(entry.key, entry.value, Color.Yellow)
+            }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        SelectGoalDropDown(label = "Priority", listItems = arrayOf("High", "Medium", "Low", "None"))
+        DropDownForPriority(
+            label = "Priority",
+            listItems = arrayOf("High", "Medium", "Low", "None")
+        )
         Spacer(modifier = Modifier.height(8.dp))
         Row(
             modifier = Modifier
@@ -113,7 +117,7 @@ fun AddTodo(
         ) {
             if (showCalendar.value) calendarState.show() else calendarState.hide()
             Text(text = "Date")
-            Text(text = date.value.toString())
+            Text(text = state.value.date.toString())
         }
         Row(
             modifier = Modifier
@@ -130,17 +134,18 @@ fun AddTodo(
             Text(text = "Time")
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(text = "${hours.value}: ${minutes.value}")
+            Text(text = "${state.value.time.first}: ${state.value.time.second}")
         }
     }
 }
 
 @Composable
-fun goalAssignedToTaskDisplay(name: String, points: Int, color: Color){
+fun goalAssignedToTaskDisplay(name: String, points: Int, color: Color) {
     Box(
         Modifier
             .border(1.dp, Color.Black, CircleShape)
-            .padding(4.dp)) {
+            .padding(4.dp)
+    ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier

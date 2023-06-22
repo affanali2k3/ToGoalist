@@ -17,7 +17,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideDatabase(app: Application): ToGoalistDatabase {
-        return Room.databaseBuilder(app, ToGoalistDatabase::class.java, "to_goal_list_db").build()
+        return Room.databaseBuilder(app, ToGoalistDatabase::class.java, "to_goal_list_db").fallbackToDestructiveMigration().build()
     }
 
     @Provides
