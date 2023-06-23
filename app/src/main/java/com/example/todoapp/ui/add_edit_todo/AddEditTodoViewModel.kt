@@ -55,8 +55,9 @@ class AddEditTodoViewModel @Inject constructor(
     }
 
     private fun saveTodo() {
+        println("Here2")
         viewModelScope.launch {
-            if (title.isBlank()) {
+            if (uiState.value.title.isBlank()) {
                 sendUiEvent(
                     UiEvent.showSnackbar(
                         message = "Title cannot be empty"
@@ -64,6 +65,7 @@ class AddEditTodoViewModel @Inject constructor(
                 )
                 return@launch
             }
+            println("Here3")
             repository.insertTodo(
                 Todo(
                     title = uiState.value.title,

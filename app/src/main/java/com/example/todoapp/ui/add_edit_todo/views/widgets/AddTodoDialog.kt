@@ -16,52 +16,54 @@ import com.example.todoapp.ui.todo_list.views.widgets.AddTodo
 
 @Composable
 fun AddTodoDialog(
+    onDismissRequest: () -> Unit
 ) {
     val viewModel: AddEditTodoViewModel = hiltViewModel()
-    val openDialog by viewModel.addTodoDialogOpen
     val todoGoal = mutableStateOf(true)
 
 
-    if (openDialog) {
-        AlertDialog(
-            modifier = Modifier.height(600.dp),
-            onDismissRequest = {
-                viewModel.addTodoDialogOpen.value = false
-            },
-            text = {
-                Column {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceAround
-                    ) {
-                        ElevatedButton(onClick = {
-                            todoGoal.value = true
-                        }) {
-                            Text("Todo")
-                        }
-                        ElevatedButton(onClick = {
-                            todoGoal.value = false
-                        }) {
-                            Text("Goal")
-                        }
-                    }
-                    Spacer(modifier = Modifier.height(10.dp))
-                    if (todoGoal.value) AddTodo() else AddGoal()
-                }
-            }, buttons = {
+    AlertDialog(
+        modifier = Modifier.height(600.dp),
+        onDismissRequest = onDismissRequest,
+        text = {
+            Column {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceAround
                 ) {
-                    ElevatedButton(onClick = { /*TODO*/ }) {
-                        Text("Cancel")
+                    ElevatedButton(onClick = {
+                        todoGoal.value = true
+                    }) {
+                        Text("Todo")
                     }
-                    ElevatedButton(onClick = { viewModel.onEvent(AddEditTodoEvent.OnSaveTodo)}) {
-                        Text("Save")
+                    ElevatedButton(onClick = {
+                        todoGoal.value = false
+                    }) {
+                        Text("Goal")
                     }
                 }
-            })
-    }
+                Spacer(modifier = Modifier.height(10.dp))
+                if (todoGoal.value) AddTodo() else AddGoal()
+            }
+        }, buttons = {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceAround
+            ) {
+                ElevatedButton(onClick = {
+                    onDismissRequest()
+                }) {
+                    Text("Cancel")
+                }
+                ElevatedButton(onClick = {
+                    viewModel.onEvent(AddEditTodoEvent.OnSaveTodo)
+                    onDismissRequest()
+                }) {
+                    Text("Save")
+                }
+            }
+        })
+
 }
 
 

@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -36,9 +37,11 @@ class TodoListViewModel @Inject constructor(
                 viewModelScope.launch {
                     goalsRepository.insertUserGoal(
                         SingleGoal(
-                            23,
-                            100,
-                            2
+                            title = "",
+                            color = 1,
+                            maxPoints = 1000,
+                            priority = "High",
+                            deadline = LocalDate.now()
                         )
                     )
                 }

@@ -26,6 +26,7 @@ fun TodoListScreen(
 ) {
     val todos = viewModel.todos.collectAsState(initial = emptyList())
     val goals = viewModel.goals.collectAsState(initial = emptyList())
+    val openDialog by viewModel.addTodoDialogOpen
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -58,7 +59,9 @@ fun TodoListScreen(
                 .fillMaxHeight()
                 .padding(horizontal = 10.dp)
         ) {
-            AddTodoDialog()
+            if (openDialog) {
+                AddTodoDialog(onDismissRequest= {viewModel.addTodoDialogOpen.value=false} )
+            }
             topGoalsWidget(goals.value)
             LazyColumn(
                 modifier = Modifier.fillMaxHeight()

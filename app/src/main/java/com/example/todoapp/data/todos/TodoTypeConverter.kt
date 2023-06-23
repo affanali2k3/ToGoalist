@@ -21,7 +21,7 @@ object TodoTypeConverter {
 
     @TypeConverter
     fun fromDate(date: LocalDate): String {
-        return gson.toString()
+        return date.toString()
     }
 
     @TypeConverter
