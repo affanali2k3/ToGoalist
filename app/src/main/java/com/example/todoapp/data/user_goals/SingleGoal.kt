@@ -10,7 +10,7 @@ import java.time.LocalDate
 @TypeConverters(SingleGoalTypeConvertor::class)
 data class SingleGoal(
     val title: String,
-    val color: Int,
+    val color: String,
     val maxPoints: Int,
     val priority: String,
     val deadline: LocalDate,

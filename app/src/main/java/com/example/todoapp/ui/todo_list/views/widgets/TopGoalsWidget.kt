@@ -34,10 +34,8 @@ fun topGoalsWidget(userGoals: List<SingleGoal>, viewModel: TodoListViewModel = h
             )
             .combinedClickable(onClick = {
                 println("Click")
-                viewModel.onEvent(TodoListEvent.OnAddGoalClick)
             }, onLongClick = {
                 println("Long Click")
-                viewModel.onEvent(TodoListEvent.OnDeleteAllGoalsLongClick)
             }),
     ) {
         Row(

@@ -7,11 +7,15 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.todoapp.ui.add_goal.AddGoalEvent
+import com.example.todoapp.ui.add_goal.AddGoalViewModel
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -20,40 +24,37 @@ import java.time.LocalTime
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddGoal() {
-    val title = remember { mutableStateOf("") }
-    val maxPoints = remember { mutableStateOf("") }
-    val date = remember { mutableStateOf(LocalDate.now()) }
-    val showCalendar = remember { mutableStateOf(false) }
+fun AddGoal(viewModel: AddGoalViewModel = hiltViewModel()) {
+    val state = viewModel.uiState.collectAsState()
     val calendarState = UseCaseState(
         onFinishedRequest = {
-            showCalendar.value = false
+            viewModel.onEvent(AddGoalEvent.OnCloseCalendar)
         }
     )
     CalendarDialog(
         state = calendarState,
         selection = CalendarSelection.Date {
-            date.value = it
+            viewModel.onEvent(AddGoalEvent.OnDeadlineChanged(it))
         },
     )
 
     Column {
         OutlinedTextField(
-            value = title.value,
-            onValueChange = { newValue ->
-                title.value = newValue
+            value = state.value.title,
+            onValueChange = {
+                viewModel.onEvent(AddGoalEvent.OnTitleChange(it))
             },
             placeholder = { Text(text = "Title") }
         )
         Spacer(modifier = Modifier.height(8.dp))
 
 
-        DropDownForColor(label = "Color", listItems = arrayOf("Yellow", "Green", "Red", "Black"))
+        DropDownForColor(label = "Color", listItems = arrayOf("Yellow", "Green", "Purple", "Red"))
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedTextField(
-            value = maxPoints.value,
-            onValueChange = { newValue ->
-                maxPoints.value = newValue
+            value = state.value.maxPoints,
+            onValueChange = {
+                viewModel.onEvent(AddGoalEvent.OnMaxPointsChanged(it))
             },
             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             placeholder = { Text(text = "Max Points") }
@@ -65,15 +66,13 @@ fun AddGoal() {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(
-                    onClick = {
-                        showCalendar.value = true
-                    }
+                    onClick = { viewModel.onEvent(AddGoalEvent.OnOpenCalendar) }
                 ),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            if (showCalendar.value) calendarState.show() else calendarState.hide()
+            if (state.value.showCalendar) calendarState.show() else calendarState.hide()
             Text(text = "Deadline")
-            Text(text = date.value.toString())
+            Text(text = state.value.deadline.toString())
         }
     }
 }

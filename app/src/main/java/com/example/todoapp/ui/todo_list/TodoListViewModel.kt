@@ -33,27 +33,6 @@ class TodoListViewModel @Inject constructor(
 
     fun onEvent(event: TodoListEvent) {
         when (event) {
-            is TodoListEvent.OnAddGoalClick -> {
-                viewModelScope.launch {
-                    goalsRepository.insertUserGoal(
-                        SingleGoal(
-                            title = "",
-                            color = 1,
-                            maxPoints = 1000,
-                            priority = "High",
-                            deadline = LocalDate.now()
-                        )
-                    )
-                }
-            }
-
-            is TodoListEvent.OnDeleteAllGoalsLongClick -> {
-                println("Here2")
-                viewModelScope.launch {
-                    goalsRepository.deleteAllUserGoals()
-                }
-            }
-
             is TodoListEvent.OnViewTodoClick -> {
                 sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO + "?todoId=${event.todo.id}"))
             }

@@ -10,6 +10,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoEvent
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
+import com.example.todoapp.ui.add_goal.AddGoalEvent
+import com.example.todoapp.ui.add_goal.AddGoalViewModel
 import com.example.todoapp.ui.todo_list.TodoListViewModel
 import com.example.todoapp.ui.todo_list.views.widgets.AddGoal
 import com.example.todoapp.ui.todo_list.views.widgets.AddTodo
@@ -19,6 +21,7 @@ fun AddTodoDialog(
     onDismissRequest: () -> Unit
 ) {
     val viewModel: AddEditTodoViewModel = hiltViewModel()
+    val viewModelGoal: AddGoalViewModel = hiltViewModel()
     val todoGoal = mutableStateOf(true)
 
 
@@ -50,13 +53,17 @@ fun AddTodoDialog(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                ElevatedButton(onClick = {
-                    onDismissRequest()
-                }) {
+                ElevatedButton(
+                    onClick = onDismissRequest
+                ) {
                     Text("Cancel")
                 }
                 ElevatedButton(onClick = {
-                    viewModel.onEvent(AddEditTodoEvent.OnSaveTodo)
+                    if (todoGoal.value)
+                        viewModel.onEvent(AddEditTodoEvent.OnSaveTodo)
+                    else
+                        viewModelGoal.onEvent(AddGoalEvent.OnSaveGoal)
+
                     onDismissRequest()
                 }) {
                     Text("Save")

@@ -1,7 +1,7 @@
 Use cases:
 1. Add a task with title, description, achievement category, achievement points, date, time and priority.
 2. Delete and edit a task.
-3. When the user marks the goal as done, it plays a sound and performs a relaxing animation.
+3. When the user marks the task as done, it plays a sound and performs a relaxing animation.
 3. Add a goal with max points, current points, color, time-span for goal. The goal would show on the homescreen on the days
    which are included in the time-span. In the goal adding section there should also be an option to break the goal into
    daily goals.
