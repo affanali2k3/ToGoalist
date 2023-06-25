@@ -9,7 +9,7 @@ import com.example.todoapp.data.user_goals.UserGoalsDao
 
 @Database(
     entities = [Todo::class, SingleGoal::class],
-    version = 4
+    version = 5
 )
 abstract class ToGoalistDatabase: RoomDatabase(){
     abstract val todoDao: TodoDao

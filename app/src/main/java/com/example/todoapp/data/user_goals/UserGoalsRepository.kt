@@ -9,9 +9,8 @@ class UserGoalsRepository(
         return dao.getUserGoals()
     }
 
-    suspend fun deleteAllUserGoals(){
-        println("Deleting")
-        dao.deleteAllUserGoals()
+    suspend fun incrementGoalPoints(goalName: Set<String>, currPoints: Int) {
+        dao.incrementGoalPoints(goalName, currPoints)
     }
 
     suspend fun insertUserGoal(goal: SingleGoal) {

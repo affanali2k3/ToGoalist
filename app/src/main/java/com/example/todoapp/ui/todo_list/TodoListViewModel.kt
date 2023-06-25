@@ -51,11 +51,7 @@ class TodoListViewModel @Inject constructor(
 
             }
 
-            is TodoListEvent.OnDoneTodoClick -> {
-                viewModelScope.launch {
-                    repository.deleteTodo(event.todo)
-                }
-            }
+            is TodoListEvent.OnDoneTodoClick -> doneTodo(event.todo)
 
             is TodoListEvent.OnDeleteTodoClick -> {
                 viewModelScope.launch {
@@ -69,6 +65,12 @@ class TodoListViewModel @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    private fun doneTodo(todo: Todo){
+        viewModelScope.launch {
+            repository.deleteTodo(todo)
         }
     }
 

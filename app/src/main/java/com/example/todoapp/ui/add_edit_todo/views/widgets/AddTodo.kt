@@ -23,6 +23,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoEvent
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
@@ -96,7 +97,7 @@ fun AddTodo(
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow() {
             state.value.categoriesWithPoints.forEach { entry ->
-                goalAssignedToTaskDisplay(entry.key, entry.value, Color.Yellow)
+                goalAssignedToTaskDisplay(entry.key, entry.value, Color.Yellow, 20)
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
@@ -140,7 +141,7 @@ fun AddTodo(
 }
 
 @Composable
-fun goalAssignedToTaskDisplay(name: String, points: Int, color: Color) {
+fun goalAssignedToTaskDisplay(name: String, points: Int, color: Color, textSize: Int) {
     Box(
         Modifier
             .border(1.dp, Color.Black, CircleShape)
@@ -155,7 +156,7 @@ fun goalAssignedToTaskDisplay(name: String, points: Int, color: Color) {
                     .height(8.dp)
             )
             Spacer(modifier = Modifier.width(2.dp))
-            Text(text = "$name +${points}")
+            Text(text = "$name +${points}", fontSize = textSize.sp)
         }
     }
 }

@@ -25,6 +25,7 @@ class AddGoalViewModel @Inject constructor(
             is AddGoalEvent.OnMaxPointsChanged -> onMaxPointsChange(event.maxPoints)
             is AddGoalEvent.OnDeadlineChanged -> onDeadlineChange(event.deadline)
             is AddGoalEvent.OnPriorityChanged -> onPriorityChange(event.priority)
+            is AddGoalEvent.OnGoalPointsIncreased -> onGoalPointsIncrease(event.goal, event.points)
             is AddGoalEvent.OnOpenCalendar -> onOpenCalendar()
             is AddGoalEvent.OnCloseCalendar -> onCloseCalendar()
             is AddGoalEvent.OnSaveGoal -> onSaveGoal()
@@ -52,7 +53,12 @@ class AddGoalViewModel @Inject constructor(
     private fun onCloseCalendar() =
         _uiState.update { uiState.value.copy(showCalendar = false) }
 
-    private fun onSaveGoal() {
+    private fun onGoalPointsIncrease(goal: SingleGoal, points: Int) =
+        viewModelScope.launch {
+            repository.incrementGoalPoints(goal.copy(currPoints = points))
+        }
+
+    private fun onSaveGoal() =
         viewModelScope.launch {
             repository.insertUserGoal(
                 SingleGoal(
@@ -60,10 +66,11 @@ class AddGoalViewModel @Inject constructor(
                     color = uiState.value.color,
                     maxPoints = uiState.value.maxPoints.toInt(),
                     priority = uiState.value.priority,
-                    deadline = uiState.value.deadline
+                    deadline = uiState.value.deadline,
+                    currPoints = 0
                 )
             )
         }
-    }
+
 }
 

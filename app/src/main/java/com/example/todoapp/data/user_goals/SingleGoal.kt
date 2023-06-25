@@ -12,6 +12,7 @@ data class SingleGoal(
     val title: String,
     val color: String,
     val maxPoints: Int,
+    val currPoints: Int,
     val priority: String,
     val deadline: LocalDate,
     @PrimaryKey val id: Int? = null,

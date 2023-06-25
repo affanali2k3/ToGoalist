@@ -1,5 +1,6 @@
 package com.example.todoapp.ui.add_goal
 
+import com.example.todoapp.data.user_goals.SingleGoal
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoEvent
 import java.time.LocalDate
 
@@ -9,6 +10,7 @@ sealed class AddGoalEvent{
     data class OnMaxPointsChanged(val maxPoints: String): AddGoalEvent()
     data class OnPriorityChanged(val priority: String): AddGoalEvent()
     data class OnDeadlineChanged(val deadline: LocalDate): AddGoalEvent()
+    data class OnGoalPointsIncreased(val goal: SingleGoal, val points: Int): AddGoalEvent()
     object OnOpenCalendar: AddGoalEvent()
     object OnCloseCalendar: AddGoalEvent()
     object OnSaveGoal: AddGoalEvent()
