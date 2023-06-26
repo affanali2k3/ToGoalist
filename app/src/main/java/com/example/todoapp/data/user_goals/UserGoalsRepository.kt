@@ -9,8 +9,8 @@ class UserGoalsRepository(
         return dao.getUserGoals()
     }
 
-    suspend fun incrementGoalPoints(goalName: Set<String>, currPoints: Int) {
-        dao.incrementGoalPoints(goalName, currPoints)
+    suspend fun incrementGoalPoints(updatedGoals: List<SingleGoal> ) {
+        dao.incrementGoalPoints(updatedGoals)
     }
 
     suspend fun insertUserGoal(goal: SingleGoal) {

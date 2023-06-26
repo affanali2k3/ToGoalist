@@ -1,6 +1,7 @@
 package com.example.todoapp.data.todos
 
 import androidx.room.TypeConverter
+import com.example.todoapp.data.user_goals.SingleGoal
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
@@ -9,13 +10,13 @@ object TodoTypeConverter {
     private val gson = Gson()
 
     @TypeConverter
-    fun fromMap(map: Map<String, Int>): String {
+    fun fromMap(map: Map<SingleGoal, Int>): String {
         return gson.toJson(map)
     }
 
     @TypeConverter
-    fun toMap(json: String): Map<String, Int>{
-        val type = object : TypeToken<Map<String, Int>>() {}.type
+    fun toMap(json: String): Map<SingleGoal, Int>{
+        val type = object : TypeToken<Map<SingleGoal, Int>>() {}.type
         return gson.fromJson(json, type)
     }
 

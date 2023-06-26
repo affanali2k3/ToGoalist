@@ -8,8 +8,8 @@ interface UserGoalsDao {
     @Insert
     suspend fun insertUserGoal(goal: SingleGoal)
 
-    @Query(value = "UPDATE userGoals SET currPoints = :currPoints WHERE title IN :goalName")
-    suspend fun incrementGoalPoints(goalName: Set<String>, currPoints: Int)
+    @Update
+    suspend fun incrementGoalPoints(updatedGoals: List<SingleGoal>)
 
     @Query(value = "SELECT * FROM userGoals")
     fun getUserGoals(): Flow<List<SingleGoal>>

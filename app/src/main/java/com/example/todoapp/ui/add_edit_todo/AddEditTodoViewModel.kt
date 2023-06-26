@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.todoapp.data.todos.Todo
 import com.example.todoapp.data.todos.TodoRepository
 import com.example.mynewapp.util.UiEvent
+import com.example.todoapp.data.user_goals.SingleGoal
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.*
@@ -50,12 +51,11 @@ class AddEditTodoViewModel @Inject constructor(
         }
     }
 
-    private fun openDialog(){
+    private fun openDialog() {
         addTodoDialogOpen.value = true
     }
 
     private fun saveTodo() {
-        println("Here2")
         viewModelScope.launch {
             if (uiState.value.title.isBlank()) {
                 sendUiEvent(
@@ -109,7 +109,14 @@ class AddEditTodoViewModel @Inject constructor(
 
     private fun addCategoryWithPoints() {
         _uiState.update {
-            it.copy(categoriesWithPoints = it.categoriesWithPoints.plus(_uiState.value.currentCategory to _uiState.value.currentPoints.toInt()))
+            it.copy(
+                categoriesWithPoints = it.categoriesWithPoints.plus(
+                    Pair(
+                        uiState.value.currentCategory,
+                        uiState.value.currentPoints.toInt()
+                    )
+                )
+            )
         }
     }
 
@@ -119,7 +126,7 @@ class AddEditTodoViewModel @Inject constructor(
         }
     }
 
-    private fun setTodoCategory(newCategory: String) {
+    private fun setTodoCategory(newCategory: SingleGoal) {
         _uiState.update {
             it.copy(currentCategory = newCategory)
         }

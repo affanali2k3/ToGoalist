@@ -5,14 +5,21 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.todoapp.data.user_goals.SingleGoal
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoEvent
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
 import com.example.todoapp.ui.add_goal.AddGoalEvent
 import com.example.todoapp.ui.add_goal.AddGoalViewModel
+import com.example.todoapp.ui.todo_list.TodoListViewModel
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownForCategory(label: String, listItems: Array<String>, viewModel: AddEditTodoViewModel = hiltViewModel()) {
+fun DropDownForCategory(
+    label: String,
+    viewModel: AddEditTodoViewModel = hiltViewModel(),
+    viewModelList: TodoListViewModel = hiltViewModel()
+) {
+    val listItems = viewModelList.goals.collectAsState(initial = listOf())
 //    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
     val contextForToast = LocalContext.current.applicationContext
     val state = viewModel.uiState.collectAsState()
@@ -29,7 +36,7 @@ fun DropDownForCategory(label: String, listItems: Array<String>, viewModel: AddE
     ) {
         // text field
         TextField(
-            value = state.value.currentCategory,
+            value = if (listItems.value.isEmpty()) "Empty" else state.value.currentCategory.title,
             onValueChange = {},
             readOnly = true,
             label = { Text(text = label) },
@@ -47,24 +54,27 @@ fun DropDownForCategory(label: String, listItems: Array<String>, viewModel: AddE
         ) {
             // this is a column scope
             // all the items are added vertically
-            listItems.forEach { selectedOption ->
+            listItems.value.forEach { selectedOption ->
                 // menu item
                 DropdownMenuItem(onClick = {
                     viewModel.onEvent(AddEditTodoEvent.OnCategoryChange(selectedOption))
-                    Toast.makeText(contextForToast, selectedOption, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(contextForToast, selectedOption.title, Toast.LENGTH_SHORT).show()
                     expanded = false
                 }) {
-                    Text(text = selectedOption)
+                    Text(text = selectedOption.title)
                 }
             }
         }
     }
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownForPriority(label: String, listItems: Array<String>, viewModel: AddEditTodoViewModel = hiltViewModel()) {
+fun DropDownForPriority(
+    label: String,
+    listItems: Array<String>,
+    viewModel: AddEditTodoViewModel = hiltViewModel()
+) {
 //    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
     val contextForToast = LocalContext.current.applicationContext
     val state = viewModel.uiState.collectAsState()
@@ -113,10 +123,13 @@ fun DropDownForPriority(label: String, listItems: Array<String>, viewModel: AddE
     }
 }
 
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownForGoalPriority(label: String, listItems: Array<String>, viewModel: AddGoalViewModel = hiltViewModel()) {
+fun DropDownForGoalPriority(
+    label: String,
+    listItems: Array<String>,
+    viewModel: AddGoalViewModel = hiltViewModel()
+) {
 //    val listItems = arrayOf("Favorites", "Options", "Settings", "Share")
     val contextForToast = LocalContext.current.applicationContext
     val state = viewModel.uiState.collectAsState()
@@ -165,19 +178,19 @@ fun DropDownForGoalPriority(label: String, listItems: Array<String>, viewModel: 
     }
 }
 
-
-
-
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropDownForColor(label: String, listItems: Array<String>, viewModel: AddGoalViewModel = hiltViewModel()) {
+fun DropDownForColor(
+    label: String,
+    listItems: Array<String>,
+    viewModel: AddGoalViewModel = hiltViewModel()
+) {
     val contextForToast = LocalContext.current.applicationContext
     val state = viewModel.uiState.collectAsState()
     // state of the menu
     var expanded by remember {
         mutableStateOf(false)
     }
-
     // box
     ExposedDropdownMenuBox(
         expanded = expanded,

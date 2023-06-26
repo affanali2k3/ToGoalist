@@ -25,8 +25,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.todoapp.data.user_goals.SingleGoal
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoEvent
 import com.example.todoapp.ui.add_edit_todo.AddEditTodoViewModel
+import com.example.todoapp.ui.todo_list.TodoListViewModel
 import com.maxkeppeker.sheets.core.models.base.UseCaseState
 import com.maxkeppeler.sheets.calendar.CalendarDialog
 import com.maxkeppeler.sheets.calendar.models.CalendarSelection
@@ -39,7 +41,7 @@ import java.time.LocalTime
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun AddTodo(
-    viewModel: AddEditTodoViewModel = hiltViewModel()
+    viewModel: AddEditTodoViewModel = hiltViewModel(),
 ) {
     val state = viewModel.uiState.collectAsState()
     val showCalendar = remember { mutableStateOf(false) }
@@ -78,7 +80,7 @@ fun AddTodo(
         )
         Spacer(modifier = Modifier.height(8.dp))
 
-        DropDownForCategory(label = "Category", listItems = arrayOf("Weight", "Kotlin", "Saas"))
+        DropDownForCategory(label = "Category")
         Spacer(modifier = Modifier.height(8.dp))
         Row {
             Box(Modifier.width(80.dp)) {
@@ -97,7 +99,7 @@ fun AddTodo(
         Spacer(modifier = Modifier.height(8.dp))
         FlowRow() {
             state.value.categoriesWithPoints.forEach { entry ->
-                goalAssignedToTaskDisplay(entry.key, entry.value, Color.Yellow, 20)
+                goalAssignedToTaskDisplay(entry.key.title, entry.value, Color.Yellow, 20)
             }
         }
         Spacer(modifier = Modifier.height(8.dp))

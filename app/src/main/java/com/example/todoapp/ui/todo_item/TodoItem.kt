@@ -45,7 +45,7 @@ fun TodoItem(
                 FlowRow(verticalArrangement = Arrangement.Center) {
                     todo.categoriesWithPoints.forEach { (category, points) ->
                         goalAssignedToTaskDisplay(
-                            name = category,
+                            name = category.title,
                             points = points,
                             color = Color.Yellow,
                             textSize = 10
@@ -82,13 +82,16 @@ fun RoundedCheckView(
         modifier = Modifier
             .toggleable(value = isChecked.value, role = Role.Checkbox) {
                 isChecked.value = it
-                viewModel.onEvent(TodoItemEvent.OnMarkTodoDone(todo = todo, goalNames = todo.categoriesWithPoints.keys, c ))
-                onTodoListEvent(
-                    TodoListEvent.OnDoneTodoClick(
-                        todo, isChecked.value
+                viewModel.onEvent(
+                    TodoItemEvent.OnMarkTodoDone(
+                        todo = todo,
+                        goalsToUpdate = todo.categoriesWithPoints
                     )
                 )
-
+//                onTodoListEvent(
+//                    TodoListEvent.OnDoneTodoClick(
+//                        todo, isChecked.value
+//                    )
                 if (isChecked.value) {
                     circleSize.value = 20.dp
                     circleThickness.value = 3.dp
