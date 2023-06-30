@@ -77,7 +77,9 @@ class AddEditTodoViewModel @Inject constructor(
                     isDone = todo?.isDone ?: false,
                     id = todo?.id
                 )
+
             )
+            println("Saved todo: ${uiState.value.categoriesWithPoints}")
             sendUiEvent(UiEvent.PopBackStack)
         }
     }
@@ -118,6 +120,7 @@ class AddEditTodoViewModel @Inject constructor(
                 )
             )
         }
+        println("State: ${uiState.value.currentCategory}")
     }
 
     private fun setTodoPoints(newPoints: String) {

@@ -63,6 +63,7 @@ fun TodoListScreen(
                 AddTodoDialog(onDismissRequest= {viewModel.addTodoDialogOpen.value=false} )
             }
             topGoalsWidget(goals.value)
+            println(todos.value)
             LazyColumn(
                 modifier = Modifier.fillMaxHeight()
             ) {

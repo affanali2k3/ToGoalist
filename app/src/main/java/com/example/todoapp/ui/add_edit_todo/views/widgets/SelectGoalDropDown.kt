@@ -52,6 +52,7 @@ fun DropDownForCategory(
             expanded = expanded,
             onDismissRequest = { expanded = false }
         ) {
+            println("List $listItems")
             // this is a column scope
             // all the items are added vertically
             listItems.value.forEach { selectedOption ->

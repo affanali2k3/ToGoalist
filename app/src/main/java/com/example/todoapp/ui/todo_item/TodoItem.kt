@@ -39,6 +39,7 @@ fun TodoItem(
             elevation = 4.dp, shape = RoundedCornerShape(4.dp), clip = true
         )
     ) {
+        println("Todo: $todo")
         Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
             Column(
             ) {

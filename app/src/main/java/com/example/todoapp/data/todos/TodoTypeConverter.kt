@@ -4,6 +4,7 @@ import androidx.room.TypeConverter
 import com.example.todoapp.data.user_goals.SingleGoal
 import com.google.gson.Gson
 import com.google.gson.JsonObject
+import com.google.gson.JsonParser
 import com.google.gson.reflect.TypeToken
 import java.time.LocalDate
 
@@ -12,21 +13,40 @@ object TodoTypeConverter {
 
     @TypeConverter
     fun fromMap(map: Map<SingleGoal, Int>): String {
-        return gson.toJson(map)
+        val serializedMap = mutableMapOf<String, Int>()
+        map.forEach { (goal, progress) ->
+            val date = goal.deadline.toString()
+            val json = JsonParser.parseString(
+                gson.toJson(goal)
+            ).asJsonObject
+            json.addProperty("deadline", date)
+            serializedMap[gson.toJson(json)] = progress
+        }
+        return gson.toJson(serializedMap)
     }
 
     @TypeConverter
-    fun toMap(json: String): Map<SingleGoal, Int>{
+    fun toMap(json: String): Map<SingleGoal, Int> {
         println("Before type conversion $json")
-        val type = object : TypeToken<Map<SingleGoal, Int>>() {}.type
-        try {
-            val x: Map<SingleGoal, Int> = gson.fromJson(json, type)
-        }catch(e: Exception){
-            println("Error: ${e.message}")
+        val serializedMapType = object : TypeToken<Map<String, Int>>() {}.type
+        val serializedMap = gson.fromJson<Map<String, Int>>(json, serializedMapType)
+        val deserializedMap = mutableMapOf<SingleGoal, Int>()
+        serializedMap.forEach { (key, value) ->
+            val temp = gson.fromJson(key, JsonObject::class.java)
+            val goal = SingleGoal(
+                title = temp.get("title").asString,
+                color = temp.get("color").asString,
+                maxPoints = temp.get("maxPoints").asInt,
+                currPoints = temp.get("maxPoints").asInt,
+                priority = temp.get("priority").asString,
+                deadline = LocalDate.parse(temp.get("deadline").asString),
+                id = temp.get("id").asInt
+            )
+            deserializedMap[goal] = value
         }
+        return deserializedMap
 
-//        println("After type conversion $x")
-        return gson.fromJson(json, type)
+
     }
 
     @TypeConverter
@@ -40,7 +60,7 @@ object TodoTypeConverter {
     }
 
     @TypeConverter
-    fun fromTime(time: Pair<Int,Int>): String {
+    fun fromTime(time: Pair<Int, Int>): String {
         return "${time.first},${time.second}"
     }
 

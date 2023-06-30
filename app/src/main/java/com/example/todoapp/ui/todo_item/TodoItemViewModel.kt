@@ -25,9 +25,18 @@ class TodoItemViewModel @Inject constructor(
     private fun markTodoDone(todo: Todo, goalsToUpdate: Map<SingleGoal, Int>) {
         val updatedGoals: MutableList<SingleGoal> = mutableListOf()
         goalsToUpdate.forEach { (goal, pointsToAdd) ->
+            println("Current points: ${goal.currPoints}")
+            println("Add points: ${pointsToAdd}")
             updatedGoals.add(goal.copy(currPoints = goal.currPoints + pointsToAdd))
         }
-        viewModelScope.launch { goalsRepository.incrementGoalPoints(updatedGoals) }
+        println("Incremented goals $updatedGoals")
+        viewModelScope.launch {
+            try{
+            goalsRepository.incrementGoalPoints(updatedGoals)
+            }catch (e: Exception){
+                println("Error ${e.message}")
+            }
+        }
 //        viewModelScope.launch { todoRepository.deleteTodo(todo) }
     }
 
