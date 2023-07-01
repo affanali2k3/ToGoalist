@@ -1,12 +1,14 @@
 package com.example.todoapp.ui.todo_list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -31,15 +33,14 @@ import com.example.todoapp.ui.todo_list.views.widgets.goalAssignedToTaskDisplay
 @Composable
 fun TodoItem(
     todo: Todo,
-    onEvent: (TodoListEvent) -> Unit,
-    modifier: Modifier,
+    viewModel: TodoItemViewModel = hiltViewModel(),
+    modifier: Modifier
 ) {
     Surface(
         modifier = Modifier.shadow(
             elevation = 4.dp, shape = RoundedCornerShape(4.dp), clip = true
         )
     ) {
-        println("Todo: $todo")
         Row(modifier = modifier, horizontalArrangement = Arrangement.SpaceBetween) {
             Column(
             ) {
@@ -60,9 +61,20 @@ fun TodoItem(
                     Text(text = todo.title, fontSize = 17.sp, fontWeight = FontWeight.Normal)
                     RoundedCheckView(todo)
                 }
-                todo.description?.let {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text(text = todo.description)
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                    todo.description?.let {
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(text = todo.description)
+                    }
+                    Icon(
+                        modifier = Modifier
+                            .size(16.dp)
+                            .clickable {
+                                viewModel.onEvent(TodoItemEvent.OnDeleteTodo(todo))
+                            },
+                        imageVector = Icons.Default.MoreVert,
+                        contentDescription = "More"
+                    )
                 }
             }
         }
@@ -75,7 +87,7 @@ fun RoundedCheckView(
     viewModel: TodoItemViewModel = hiltViewModel()
 ) {
     val isChecked = remember { mutableStateOf(false) }
-    val circleSize = remember { mutableStateOf(20.dp) }
+    val circleSize = remember { mutableStateOf(18.dp) }
     val circleThickness = remember { mutableStateOf(2.dp) }
     val color = remember { mutableStateOf(Color.Gray) }
     Row(
@@ -83,6 +95,7 @@ fun RoundedCheckView(
         modifier = Modifier
             .toggleable(value = isChecked.value, role = Role.Checkbox) {
                 isChecked.value = it
+                println("Todo to Event: ${todo.categoriesWithPoints}")
                 viewModel.onEvent(
                     TodoItemEvent.OnMarkTodoDone(
                         todo = todo,

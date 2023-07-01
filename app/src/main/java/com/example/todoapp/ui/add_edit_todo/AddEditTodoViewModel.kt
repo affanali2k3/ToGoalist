@@ -65,7 +65,6 @@ class AddEditTodoViewModel @Inject constructor(
                 )
                 return@launch
             }
-            println("Here3")
             repository.insertTodo(
                 Todo(
                     title = uiState.value.title,
@@ -79,7 +78,6 @@ class AddEditTodoViewModel @Inject constructor(
                 )
 
             )
-            println("Saved todo: ${uiState.value.categoriesWithPoints}")
             sendUiEvent(UiEvent.PopBackStack)
         }
     }
@@ -120,7 +118,6 @@ class AddEditTodoViewModel @Inject constructor(
                 )
             )
         }
-        println("State: ${uiState.value.currentCategory}")
     }
 
     private fun setTodoPoints(newPoints: String) {

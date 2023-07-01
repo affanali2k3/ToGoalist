@@ -27,7 +27,6 @@ object TodoTypeConverter {
 
     @TypeConverter
     fun toMap(json: String): Map<SingleGoal, Int> {
-        println("Before type conversion $json")
         val serializedMapType = object : TypeToken<Map<String, Int>>() {}.type
         val serializedMap = gson.fromJson<Map<String, Int>>(json, serializedMapType)
         val deserializedMap = mutableMapOf<SingleGoal, Int>()
@@ -37,7 +36,7 @@ object TodoTypeConverter {
                 title = temp.get("title").asString,
                 color = temp.get("color").asString,
                 maxPoints = temp.get("maxPoints").asInt,
-                currPoints = temp.get("maxPoints").asInt,
+                currPoints = temp.get("currPoints").asInt,
                 priority = temp.get("priority").asString,
                 deadline = LocalDate.parse(temp.get("deadline").asString),
                 id = temp.get("id").asInt

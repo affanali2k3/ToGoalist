@@ -1,6 +1,8 @@
 package com.example.todoapp.data.todos
 
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.FlowCollector
+import kotlinx.coroutines.flow.toList
 
 class TodoRepository(
     private val dao: TodoDao
@@ -14,6 +16,7 @@ class TodoRepository(
     }
 
     suspend fun getTodo(id: Int): Todo? {
+
         return dao.getTodo(id)
     }
 

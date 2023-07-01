@@ -31,13 +31,13 @@ class TodoItemViewModel @Inject constructor(
         }
         println("Incremented goals $updatedGoals")
         viewModelScope.launch {
-            try{
-            goalsRepository.incrementGoalPoints(updatedGoals)
-            }catch (e: Exception){
+            try {
+                goalsRepository.incrementGoalPoints(updatedGoals)
+            } catch (e: Exception) {
                 println("Error ${e.message}")
             }
         }
-//        viewModelScope.launch { todoRepository.deleteTodo(todo) }
+        viewModelScope.launch { todoRepository.deleteTodo(todo) }
     }
 
     private fun deleteTodo(todo: Todo) {
