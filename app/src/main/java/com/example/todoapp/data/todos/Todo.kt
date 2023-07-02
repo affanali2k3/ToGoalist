@@ -12,7 +12,7 @@ data class Todo(
     val title: String,
     val description: String?,
 
-    val categoriesWithPoints: Map<SingleGoal, Int>,
+    val categoriesWithPoints: MutableMap<SingleGoal, Int>,
 
     val priority: String,
     val date: LocalDate,

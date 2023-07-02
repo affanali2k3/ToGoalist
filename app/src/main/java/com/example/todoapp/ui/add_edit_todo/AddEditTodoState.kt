@@ -16,7 +16,7 @@ data class AddEditTodoState(
         deadline = LocalDate.now()
     ),
     val currentPoints: String = "",
-    val categoriesWithPoints: Map<SingleGoal, Int> = mapOf(),
+    val categoriesWithPoints: MutableMap<SingleGoal, Int> = mutableMapOf(),
     val priority: String = "None",
     val date: LocalDate = LocalDate.now(),
     val time: Pair<Int, Int> = Pair(LocalTime.now().hour, LocalTime.now().minute)

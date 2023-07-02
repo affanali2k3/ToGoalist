@@ -68,7 +68,30 @@ class TodoListViewModel @Inject constructor(
         }
     }
 
-    private fun doneTodo(todo: Todo){
+    private suspend fun updatedTodoOnGoalsUpdate(updatedGoals: List<SingleGoal>) {
+        todos.collect { todos ->
+            todos.forEach { todo ->
+                println("Todo before: $todo")
+                    updatedGoals.forEach{ goal ->
+                        todo.categoriesWithPoints.keys.forEach{ goalToUpdate ->
+                            if(goalToUpdate.id == goal.id){
+                                val points = todo.categoriesWithPoints[goalToUpdate]
+                                todo.categoriesWithPoints.remove(goalToUpdate)
+                                todo.categoriesWithPoints[goal] = points!!
+                            }
+                    }
+                }
+                println("Todo after: $todo")
+                viewModelScope.launch {
+                    repository.insertTodo(todo)
+                }
+            }
+        }
+
+
+    }
+
+    private fun doneTodo(todo: Todo) {
         viewModelScope.launch {
             repository.deleteTodo(todo)
         }
